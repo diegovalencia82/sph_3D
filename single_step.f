@@ -79,27 +79,27 @@ c     parameter ( npairs = (kappa0+2)**dim)
          write(*,*)'-------------------------------------'
       endif
 
-      write(*,*)'ss111'
+c      write(*,*)'ss111'
       
       call  input(mspace,ntotal,nfluid,nvirt,1)
 
-      write(*,*)'ss222'
+      write(*,*)'Neighboring research'
       
-      call neighboring_search(rdomain,mspace,ntype,npairs,pairs,nfilas,
-     +     mrij,mxij,mvij,mvxij)
+c      call neighboring_search(rdomain,mspace,ntype,npairs,pairs,nfilas,
+c     +     mrij,mxij,mvij,mvxij)
 
-      write(*,*)'ss333'
+      call neighboring_searchx(rdomain,mspace,ntype,npairs,pairs,
+     +     nfilas,mrij,mxij,mvij,mvxij,itimestep)
+
+c      write(*,*)'ss333'
       
-c      call neighboring_searchv(rdomain,mspace,ntype,npairs,pairsv,
-c     +     nfilasv,mrijv,mxijv)
-
       call wijdwij(mspace,pairs,mrij,mxij,npairs,nfilas,ntype,w,dwdx)
 
-      write(*,*)'ss444'
+c      write(*,*)'ss444'
       
       call density(mspace,ntype,npairs,pairs,nfilas,w)
 
-      write(*,*)'ss555'
+c      write(*,*)'ss555'
       
 c      do i=1,nmax
 c         do j=1,nfilas(i)
@@ -111,12 +111,12 @@ c      enddo
       
       call presioni(mspace,ntype)
 
-      write(*,*)'ss666'
+c      write(*,*)'ss666'
       
       call momento(mspace,ntype,npairs,pairs,nfilas,w,dwdx,mrij,mxij,
      +     mvij,mvxij,pairsv,nfilasv,mrijv,mxijv)
 
-      write(*,*)'ss777'
+c      write(*,*)'ss777'
       
 c      do i=1,ntype(1)
 c         do j=1,nfilas(i)

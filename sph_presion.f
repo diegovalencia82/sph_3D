@@ -45,7 +45,7 @@ c      double precision mvij(npairs,ntype(1)),mvxij(3,npairs,ntype(1))
 ! mspace(9,i) = rho      
 ! mspace(10,i) = p
       
-      do i=1,ntype(1)!-ntype(2)
+      do i=1,ntype(1)-ntype(2)
          mspace(20,i) = 0.0
          mspace(21,i) = 0.0
          mspace(22,i) = 0.0

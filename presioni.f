@@ -73,7 +73,7 @@ c      p = b*((rho/rho0)**gamma-1)
 
       
       do i=1,ntype(1)
-         mspace(14,i) = sqrt(beta*g*ht)       !c = sqrt(beta*g*ht)    !1480.
+         mspace(14,i) = beta*sqrt(2.*g*ht)       !c = sqrt(beta*g*ht)    !1480.
          b = rho0*mspace(14,i)*mspace(14,i)/gamma
          mspace(10,i) = b*((mspace(9,i)/rho0)**gamma-1.)
       enddo

@@ -58,27 +58,27 @@ c     epsilon(6,i) : Tasa de deformación $\varepsilon^{zz}$
          mspace(22,i)=0.
       enddo
 
-      write(*,*)'mm111'
+c      write(*,*)'mm111'
       
       call sph_presion(mspace,ntype,npairs,pairs,nfilas,w,dwdx)
 
-      write(*,*)'mm222'
+c      write(*,*)'mm222'
 
       call tasa_deformacion_epsilon(mspace,ntype,npairs,pairs,nfilas,w,
      +     dwdx,mxij,mvij,mvxij,epsilon)
 
-      write(*,*)'mm333'
+c      write(*,*)'mm333'
       
       viscforce = 0.0
       call viscous_force(mspace,ntype,npairs,pairs,nfilas,dwdx,epsilon,
      +     viscforce)
 
-      write(*,*)'mm444'
+c      write(*,*)'mm444'
       
       call external_force(mspace,ntype,npairs,pairs,nfilas,mrij,mxij
      +     ,extforce)
 
-      write(*,*)'mm555'
+c      write(*,*)'mm555'
       
       do i=1,ntype(1) - ntype(2)
 c         write(*,*)'xx',i,mspace(20,i),viscforce(1,i) + viscforce(2,i) +
@@ -96,7 +96,7 @@ c     +        viscforce(9,i)
      +        viscforce(9,i) + extforce(3,i)
       enddo
 
-      write(*,*)'mm666'
+c      write(*,*)'mm666'
 
       
       end

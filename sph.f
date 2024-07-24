@@ -35,6 +35,11 @@ c     mspace(25,i) = drho      : drho = drh,o/dt                   [out]
       integer ntotal,nfluid,nvirt,ntype(2) !, itype(nmax),id(nmax)
       double precision dt,mspace(25,nmax)
 
+      real :: start_time, end_time, total_time
+
+! Obtener el tiempo inicial
+      call CPU_TIME(start_time)
+      
       dt = dt0
       
       call input(mspace,ntotal,nfluid,nvirt,0)
@@ -53,5 +58,15 @@ c     mspace(25,i) = drho      : drho = drh,o/dt                   [out]
       write(*,*)' **************************************************' 
 
       call time_integration(mspace,ntotal,ntype,dt)
+
+! Obtener el tiempo final
+      call CPU_TIME(end_time)
+! Calcular el tiempo de CPU consumido
+      total_time = end_time - start_time
+      open(83,file='time_CPU.dat')
+      write(83,*)'START TIME=', start_time
+      write(83,*)'END TIME=', end_time
+      write(83,*)'cpu_time = end_time - start_time=', total_time
+      close(83)
       
       end      
