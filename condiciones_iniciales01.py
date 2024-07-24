@@ -2,22 +2,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-# Parámetros de la caja y del bloque de agua
-box_length = 0.584
-box_width = 0.2
-box_height = 0.73
-water_length = 0.15
-particle_spacing = 0.012167  # Espaciado entre partículas del fluido
+# Parametros para el espacio de partículas
+particle_spacing = 0.008#0.012167  # Espaciado entre partículas del fluido
 delta = particle_spacing  # Pequeño delta para no sobreponerse con las paredes
-water_width = 0.2 - delta  # pequeño delta para no sobreponerse con las paredes
+
+# Parámetros de la caja y del bloque de agua
+box_length = 0.6
+box_width = 0.2
+box_height = 0.6
+
+# Parámetros para el bloque de agua
+water_length = 0.3
+water_width = box_width - delta  # pequeño delta para no sobreponerse con las paredes
 water_height = 0.3
 wall_particle_spacing = particle_spacing / 2  # Espaciado entre partículas de las paredes
 
 # Constantes físicas
+g = 9.82
 gamma = 7.0
-beta = 0.1  # Ajuste según sea necesario
+beta0 = 10.  # Ajuste según sea necesario
+beta = beta0 * 1.0
 ht = water_height
-c =np.sqrt(beta * 9.82 * ht)#beta * np.sqrt(9.8 * ht)
+c = beta * np.sqrt(2. * g * ht)
 rho0 = 1000.
 b = rho0 * c * c / gamma
 
@@ -61,14 +67,26 @@ ids_fluid = np.arange(1, num_fluid_particles + 1)
 ids_wall = np.arange(num_fluid_particles + 1, num_particles + 1)
 velocities = np.zeros((num_particles, 3))
 
-# Densidad y masa de las partículas
-rho = np.full(num_particles, rho0)
+# Densidad, presión y masa de las partículas
+#rho = np.full(num_particles, rho0)
 dx = particle_spacing
-mass = np.full(num_particles, dx * dx * dx * rho0)
+rho = np.zeros(num_particles)
+pressure = np.zeros(num_particles)
+mass = np.zeros(num_particles)
+for i in range(num_fluid_particles):
+    rho[i] = rho0 * (1 + (rho0 * g * (ht - abs(water_particles[i, 2])) / b ))**(1.0 / gamma)
+    pressure[i] = b * ((rho[i] / rho0)**gamma - 1.0)
+    mass[i] = dx *dx *dx * rho[i]
+    
+# Para las partículas de pared, mantener rho0
+rho[num_fluid_particles:] = rho0
+pressure[num_fluid_particles:] = 0.0
+mass[num_fluid_particles:] = dx * dx * dx * rho0
+
+#mass = np.full(num_particles, dx * dx * dx * rho0)
 #mass = np.full(num_particles, (4/3) * np.pi * dx*dx*dx * rho0)
 
 # Presión y energía interna
-pressure = np.zeros(num_particles)
 internal_energy = np.full(num_particles, 357.1)
 
 # Tipo de partícula y hsml
