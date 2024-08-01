@@ -12,7 +12,7 @@ c     dim : Dimension of the problem (1, 2 or 3)
 
 c     nmax	: Maximum number of particles
       integer nmax
-      parameter ( nmax = 98987 )
+      parameter ( nmax = 29232 )
 c
       integer maxtimestep, initime, fintime, inioutfile
       parameter ( initime = 0, fintime = 5000 ) 
@@ -27,7 +27,7 @@ c     Time step integration
 c     Definition of the support domain, take odd numbers
 c     h0 is taken from the space of particles in the initial conditions
       double precision h0, kappa0
-      parameter ( kappa0 = 2., h0 = 0.008 ) 
+      parameter ( kappa0 = 2., h0 = 0.012167 ) 
 
 c     Smoothing kernel function
 c     skf = 1, cubic spline kernel by W4 - Spline (Monaghan 1985)
@@ -49,12 +49,12 @@ c     Artificial EOS.
 c     Initial density of particles, rho0
       double precision gamma, beta, rho0
 c      parameter ( gamma=7.0, beta = 0.005, rho0 = 1000.0)
-      parameter ( gamma=7.0, beta = 0.4, rho0 = 1000.0)
+      parameter ( gamma=7.0, beta = 0.7, rho0 = 1000.0)
 
 c     viscous force
       double precision mu, muc
 c      parameter ( mu=1.002e-3, muc=1000*2)
-      parameter ( mu=1.002e-3, muc=1000.)
+      parameter ( mu=1.002e-3, muc=1.)
 
 
 c      To save steps

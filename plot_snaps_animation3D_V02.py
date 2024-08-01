@@ -67,10 +67,10 @@ def update(frame):
     colors = sm.to_rgba(velocity)
     
     # Dibujar las partículas en el frame actual con el color correspondiente en la gráfica 3D
-    ax_3d.scatter(data[:, 1], data[:, 2], data[:, 3], color=colors,s=25,alpha=0.5)
+    ax_3d.scatter(data[:, 1], data[:, 2], data[:, 3], color=colors,s=1,alpha=0.5)
 
     # Dibujar las partículas en el frame actual con el color correspondiente en la gráfica 2D (x-z)
-    ax_xz.scatter(data[:, 1], data[:, 3], color=colors,s=25,alpha=0.5)
+    ax_xz.scatter(data[:, 1], data[:, 3], color=colors,s=1,alpha=0.5)
 
     if sel == 1:
         # Seleccionar las partículas con itype = -1 y pintarlas de color gris en ambas gráficas
@@ -98,7 +98,7 @@ ax_xz = fig.add_subplot(gs[1])
 data_frames = []
 
 # Iterar sobre los nombres de archivo del tipo 'snapshot_0001', 'snapshot_0002', ..., 'snapshot_2000
-for i in range(1,500):
+for i in range(1,400):
     # Formatear el nombre de archivo con el número de snapshot
     filename = f'snapshot_{i:04d}'
     # Crear la ruta completa al archivo
@@ -112,9 +112,18 @@ for i in range(1,500):
         print(f'El archivo {filename} no existe en la carpeta especificada.')
 
 # Crear la animación
-anim = FuncAnimation(fig, update, frames=data_frames, interval=75)  # Intervalo de 5 milisegundos entre cada frame
+anim = FuncAnimation(fig, update, frames=data_frames, interval=50)  # Intervalo de 5 milisegundos entre cada frame
+
+# Añadir la barra de colores en la parte superior izquierda
+cbar_ax = fig.add_axes([0.15, 0.92, 0.7, 0.02])  # [left, bottom, width, height]
+norm = Normalize(vmin=0, vmax=np.sqrt(2*9.8*0.6))
+cmap = plt.get_cmap('coolwarm')
+sm = ScalarMappable(norm=norm, cmap=cmap)
+cbar = plt.colorbar(sm, cax=cbar_ax, orientation='horizontal')
+cbar_ax.text(1.0, 1.3, 'Velocity magnitude', transform=cbar_ax.transAxes, ha='right', va='bottom', fontsize=12)
 
 # Guardar la animación como un archivo .mp4
 anim.save('animacion_3D.mp4', writer='ffmpeg')
 
+plt.tight_layout(rect=[0, 0, 1, 0.9])  # Ajustar el layout para dejar espacio a la barra de colores
 plt.show()

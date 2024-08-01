@@ -3,24 +3,26 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 # Parametros para el espacio de partículas
-particle_spacing = 0.008#0.012167  # Espaciado entre partículas del fluido
+particle_spacing = 0.012167  # Espaciado entre partículas del fluido
 delta = particle_spacing  # Pequeño delta para no sobreponerse con las paredes
 
 # Parámetros de la caja y del bloque de agua
 box_length = 0.6
-box_width = 0.2
-box_height = 0.6
+box_width0 = 0.2
+box_width = round(box_width0 / particle_spacing) * particle_spacing
+print('box_width modificate=',box_width)
+box_height = 0.4
 
 # Parámetros para el bloque de agua
 water_length = 0.3
-water_width = box_width - delta  # pequeño delta para no sobreponerse con las paredes
+water_width = box_width - delta/2.  # pequeño delta para no sobreponerse con las paredes
 water_height = 0.3
 wall_particle_spacing = particle_spacing / 2  # Espaciado entre partículas de las paredes
 
 # Constantes físicas
 g = 9.82
 gamma = 7.0
-beta0 = 10.  # Ajuste según sea necesario
+beta0 = 1.0  # Ajuste según sea necesario
 beta = beta0 * 1.0
 ht = water_height
 c = beta * np.sqrt(2. * g * ht)
@@ -35,24 +37,25 @@ xx_water, yy_water, zz_water = np.meshgrid(x_water, y_water, z_water)
 water_particles = np.vstack([xx_water.ravel(), yy_water.ravel(), zz_water.ravel()]).T
 
 # Crear partículas para las paredes de la caja
-x_box = np.arange(0, box_length, wall_particle_spacing)
-y_box = np.arange(0, box_width, wall_particle_spacing)
-z_box = np.arange(0, box_height, wall_particle_spacing)
+x_box = np.arange(0, box_length+wall_particle_spacing, wall_particle_spacing)
+y0_box = np.arange(0, box_width+wall_particle_spacing, wall_particle_spacing)
+y_box = np.arange(wall_particle_spacing, box_width, wall_particle_spacing)
+z_box = np.arange(wall_particle_spacing, box_height+wall_particle_spacing, wall_particle_spacing)
 
 wall_particles = []
 # Paredes laterales
-for y in [0, box_width - wall_particle_spacing]:
+for y in [0, box_width]:
     for x in x_box:
         for z in z_box:
             wall_particles.append([x, y, z])
 # Paredes frontal y trasera
-for x in [0, box_length - wall_particle_spacing]:
+for x in [0, box_length]:
     for y in y_box:
         for z in z_box:
             wall_particles.append([x, y, z])
 # Piso
 for x in x_box:
-    for y in y_box:
+    for y in y0_box:
         wall_particles.append([x, y, 0])
 
 wall_particles = np.array(wall_particles)
@@ -121,6 +124,21 @@ ax.scatter(wall_particles[:, 0], wall_particles[:, 1], wall_particles[:, 2], c='
 
 # Bloque de agua (puntos más grandes)
 ax.scatter(water_particles[:, 0], water_particles[:, 1], water_particles[:, 2], c='b', s=50, label='Water')
+
+
+
+# Definir los límites de los ejes para que tengan la misma escala
+max_range = np.array([box_length, box_width, box_height]).max() / 2.0
+mid_x = (x_box.max() + x_box.min()) * 0.5
+mid_y = (y_box.max() + y_box.min()) * 0.5
+mid_z = (z_box.max() + z_box.min()) * 0.5
+ax.set_xlim(mid_x - max_range, mid_x + max_range)
+ax.set_ylim(mid_y - max_range, mid_y + max_range)
+ax.set_zlim(mid_z - max_range, mid_z + max_range)
+
+ax.set_box_aspect([1,1,1])  # Para asegurarse de que los ejes tengan la misma escala
+
+
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')

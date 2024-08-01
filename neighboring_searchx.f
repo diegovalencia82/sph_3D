@@ -77,7 +77,7 @@ c      write(*,*)'Busca vecinos'
       do k = 1,ntype(1) - ntype(2)
          i = ind_x(k)
          if(mspace(12,i).eq.1.)then
-            call calcular_rango(i,ntype(1),window_size,init,ifin)
+c            call calcular_rango(i,ntype(1),window_size,init,ifin)
             nfilas(i) = 0
             do h = 1,ntype(1)!init,ifin!ntype(1)   !1,ntype(1)!
                j = ind_x(h)
